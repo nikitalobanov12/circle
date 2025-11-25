@@ -1,14 +1,12 @@
 export default function NextButton() {
-    return (
-        <>
-            <footer className="absolute w-full bottom-16">
-                <button
-                    type="submit"
-                    className={`bg-blue-800 text-2xl text-white text-center rounded-full p-3 m-au w-full max-w-full transition-colors`}
-                >
-                    Next
-                </button>
-            </footer>
-        </>
-    );
+	return (
+		<div className='mt-8'>
+			<button
+				type='submit'
+				className='w-full py-3 bg-[var(--primary)] text-white text-lg font-medium rounded-full hover:opacity-90 transition-opacity'
+			>
+				Next
+			</button>
+		</div>
+	);
 }
