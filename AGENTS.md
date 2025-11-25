@@ -24,3 +24,11 @@ Next.js 15 (App Router), React 19, TypeScript, Prisma (with Accelerate), NextAut
 - API routes: `src/app/api/*/route.ts` with GET/POST/PATCH/DELETE exports
 - Components: `src/components/` organized by feature
 - Shared utilities: `src/lib/`
+- Providers: `src/components/providers/` (SessionProvider, GuestProvider)
+
+## Key Routes
+- `/` - Landing page (public)
+- `/home` - Authenticated user feed
+- `/guest/browse` - Guest browsing mode (public)
+- `/auth/login`, `/auth/register` - Authentication (public)
+- `/circle/[id]`, `/album/[id]` - Content pages (public read, auth for write)

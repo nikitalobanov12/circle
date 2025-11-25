@@ -2,22 +2,37 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaHome, FaSearch, FaPlusCircle, FaBell, FaUser } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { FaHome, FaSearch, FaPlusCircle, FaBell, FaUser, FaSignInAlt } from 'react-icons/fa';
+import { useState, useEffect, useMemo } from 'react';
 import CreateContainer from '../create/create_container';
 import { useSession } from 'next-auth/react';
+import { useGuest } from '@/components/providers/GuestProvider';
 
 export default function NavBar() {
 	const pathname = usePathname();
-	const { data: session } = useSession({ required: false });
+	const { data: session, status } = useSession({ required: false });
+	const { promptSignUp } = useGuest();
 	const [createVisibility, setCreateVisibility] = useState(false);
+	
+	const isAuthenticated = status === 'authenticated' && !!session?.user;
+	const isGuest = !isAuthenticated;
+
+	// Base nav items for authenticated users
 	const [navItems, setNavItems] = useState([
-		{ name: 'home', path: '/', icon: FaHome },
-		{ name: 'Search', path: '/search', icon: FaSearch },
-		{ name: 'New', path: '/new', icon: FaPlusCircle },
-		{ name: 'Activity', path: '/activity', icon: FaBell },
-		{ name: 'Profile', path: '/profile', icon: FaUser },
+		{ name: 'Home', path: '/home', icon: FaHome, requiresAuth: false },
+		{ name: 'Search', path: '/search', icon: FaSearch, requiresAuth: false },
+		{ name: 'New', path: '/new', icon: FaPlusCircle, requiresAuth: true },
+		{ name: 'Activity', path: '/activity', icon: FaBell, requiresAuth: true },
+		{ name: 'Profile', path: '/profile', icon: FaUser, requiresAuth: true },
 	]);
+
+	// Guest nav items
+	const guestNavItems = useMemo(() => [
+		{ name: 'Browse', path: '/guest/browse', icon: FaHome, requiresAuth: false },
+		{ name: 'Search', path: '/search', icon: FaSearch, requiresAuth: false },
+		{ name: 'Sign In', path: '/auth/login', icon: FaSignInAlt, requiresAuth: false },
+	], []);
+
 	useEffect(() => {
 		interface ExtendedUser {
 			username?: string;
@@ -29,18 +44,33 @@ export default function NavBar() {
 	}, [session]);
 
 	const toggleCreateContainer = () => {
+		if (isGuest) {
+			promptSignUp('create content');
+			return;
+		}
 		setCreateVisibility(() => !createVisibility);
 	};
+
+	const handleGuestClick = (e: React.MouseEvent, item: typeof navItems[0]) => {
+		if (isGuest && item.requiresAuth) {
+			e.preventDefault();
+			promptSignUp(item.name.toLowerCase());
+		}
+	};
+
+	const activeNavItems = isGuest ? guestNavItems : navItems;
 
 	return (
 		<>
 			<nav className='fixed bottom-0 left-0 right-0 z-50 bg-[var(--background)] flex justify-center '>
 				<div className='w-full max-w-xl p-2 flex justify-between border-t border-border/40'>
-					{navItems.map(item => {
+					{activeNavItems.map(item => {
 						const isProfileItem = item.name === 'Profile';
-						const isActive = isProfileItem ? pathname === item.path || (pathname.startsWith('/profile/') && item.path === '/profile') : pathname === item.path;
+						const isActive = isProfileItem 
+							? pathname === item.path || (pathname.startsWith('/profile/') && item.path === '/profile') 
+							: pathname === item.path || (item.name === 'Browse' && pathname === '/guest/browse');
 
-						if (item.name === 'New') {
+						if (item.name === 'New' && !isGuest) {
 							return (
 								<div
 									key={item.name}
@@ -59,6 +89,7 @@ export default function NavBar() {
 							<Link
 								key={item.name}
 								href={item.path}
+								onClick={(e) => handleGuestClick(e, item)}
 								className={`flex flex-col items-center flex-1 py-2 rounded-md transition-all duration-200 
                                 ${isActive ? 'text-[var(--primary)] font-medium' : 'text-[var(--foreground)] opacity-70'} 
                                 hover:bg-[var(--foreground)]/5 hover:text-[var(--primary)]`}
@@ -70,10 +101,12 @@ export default function NavBar() {
 					})}
 				</div>
 			</nav>
-			<CreateContainer
-				isVisible={createVisibility}
-				onClose={() => setCreateVisibility(false)}
-			/>
+			{!isGuest && (
+				<CreateContainer
+					isVisible={createVisibility}
+					onClose={() => setCreateVisibility(false)}
+				/>
+			)}
 		</>
 	);
 }
