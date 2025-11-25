@@ -112,14 +112,16 @@ export default function ProfileScreen({ session, username }: ProfileScreenProps)
     };
 
     return (
-        <div className="min-h-screen bg-circles-dark px-4 pt-6 pb-20">
-            <ProfileHeader 
-                profileData={profileData} 
-                session={session} 
-                onFollowUpdate={handleFollowUpdate}
-            />
-            {/* ProfileTabs doesn't need any props */}
-            <ProfileTabs />
+        <div className="min-h-screen bg-[var(--background)]">
+            <div className="w-full max-w-xl mx-auto px-4 pt-6 pb-20">
+                <ProfileHeader 
+                    profileData={profileData} 
+                    session={session} 
+                    onFollowUpdate={handleFollowUpdate}
+                />
+                {/* ProfileTabs doesn't need any props */}
+                <ProfileTabs />
+            </div>
         </div>
     );
 }

@@ -109,8 +109,8 @@ export default function CreateCircle({ session }: { session: Session | null }) {
 		}
 	};
 	return (
-		<>
-			<div className='flex flex-col h-full w-full'>
+		<div className='min-h-screen bg-[var(--background)]'>
+			<div className='flex flex-col h-full w-full max-w-xl mx-auto'>
 				{showReturnNotice && (
 					<div className='bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4'>
 						<div className='flex items-center'>
@@ -196,6 +196,6 @@ export default function CreateCircle({ session }: { session: Session | null }) {
 					/>
 				)}
 			</div>
-		</>
+		</div>
 	);
 }

@@ -100,7 +100,7 @@ export const { handlers, signIn, signOut, auth } = (NextAuth as any)({
 								username,
 								name: user.name || username,
 								profileImage: user.image || null,
-								password: null, // OAuth users don't have passwords
+								password: '', // OAuth users don't have passwords
 							},
 						});
 					}

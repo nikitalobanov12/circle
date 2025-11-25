@@ -3,6 +3,7 @@
 import {Session} from "next-auth";
 import {redirect} from "next/navigation";
 import {signOut} from "next-auth/react";
+import Link from "next/link";
 
 export default function DeletePrompt({session}: {session: Session | null}) {
     const handleDelete = async () => {
@@ -41,9 +42,7 @@ export default function DeletePrompt({session}: {session: Session | null}) {
                     </button>
                 </div>
                 <div className="border-1 rounded-full w-95 p-2 font-bold">
-                    <button>
-                        <a href="/">Cancel</a>
-                    </button>
+                    <Link href="/">Cancel</Link>
                 </div>
             </div>
         </>

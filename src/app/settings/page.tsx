@@ -9,63 +9,65 @@ import NavBar from "@/components/bottom_bar/NavBar";
 export default function SettingsPage() {
     return (
         <>
-            <div className="w-full max-w-2xl mx-auto min-h-screen p-6 mb-10">
-                {/* <DemoNavBar /> */}
-                <header className="mb-6">
-                    <h1 className="text-3xl font-bold">Settings</h1>
-                </header>
+            <div className="min-h-screen bg-[var(--background)]">
+                <div className="w-full max-w-xl mx-auto p-6 mb-10">
+                    {/* <DemoNavBar /> */}
+                    <header className="mb-6">
+                        <h1 className="text-3xl font-bold">Settings</h1>
+                    </header>
 
-                <SettingsCategory title="Albums">
-                    <SettingsItem
-                        label="Privacy"
-                        icon={<FaImages />}
-                        href="/settings/albums"
-                    />
-                    <SettingsItem
-                        label="Notification"
-                        icon={<FaBell />}
-                        href="/settings/albums"
-                    />
-                </SettingsCategory>
+                    <SettingsCategory title="Albums">
+                        <SettingsItem
+                            label="Privacy"
+                            icon={<FaImages />}
+                            href="/settings/albums"
+                        />
+                        <SettingsItem
+                            label="Notification"
+                            icon={<FaBell />}
+                            href="/settings/albums"
+                        />
+                    </SettingsCategory>
 
-                <SettingsCategory title="Accessibility">
-                    <SettingsItem
-                        label="Dark / Light Mode"
-                        icon={<FaAdjust />}
-                        href="/settings/accessibility"
-                    />
-                    <SettingsItem
-                        label="Contrast"
-                        icon={<FaAdjust />}
-                        href="/settings/accessibility"
-                    />
-                    <SettingsItem
-                        label="Font Size"
-                        icon={<FaAdjust />}
-                        href="/settings/accessibility"
-                    />
-                </SettingsCategory>
+                    <SettingsCategory title="Accessibility">
+                        <SettingsItem
+                            label="Dark / Light Mode"
+                            icon={<FaAdjust />}
+                            href="/settings/accessibility"
+                        />
+                        <SettingsItem
+                            label="Contrast"
+                            icon={<FaAdjust />}
+                            href="/settings/accessibility"
+                        />
+                        <SettingsItem
+                            label="Font Size"
+                            icon={<FaAdjust />}
+                            href="/settings/accessibility"
+                        />
+                    </SettingsCategory>
 
-                <SettingsCategory title="Account">
-                    <SettingsItem
-                        label="Friends List"
-                        icon={<FaUserFriends />}
-                        href="/settings/friends"
-                    />
-                    <SettingsItem
-                        customColour="red"
-                        label="Delete Account"
-                        icon={<FaTrash />}
-                        href="/settings/terminate"
-                    />
-                    <SettingsItem
-                        label="Logout"
-                        icon={<FaSignOutAlt />}
-                        onClick={async () => {
-                            await signOut({redirectTo: "/auth/login"});
-                        }}
-                    />
-                </SettingsCategory>
+                    <SettingsCategory title="Account">
+                        <SettingsItem
+                            label="Friends List"
+                            icon={<FaUserFriends />}
+                            href="/settings/friends"
+                        />
+                        <SettingsItem
+                            customColour="red"
+                            label="Delete Account"
+                            icon={<FaTrash />}
+                            href="/settings/terminate"
+                        />
+                        <SettingsItem
+                            label="Logout"
+                            icon={<FaSignOutAlt />}
+                            onClick={async () => {
+                                await signOut({redirectTo: "/auth/login"});
+                            }}
+                        />
+                    </SettingsCategory>
+                </div>
             </div>
             <NavBar />
         </>

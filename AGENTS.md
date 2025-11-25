@@ -4,8 +4,16 @@
 - `npm run dev` - Start development server
 - `npm run build` - Build for production (runs prisma generate first)
 - `npm run lint` - Run ESLint
+- `bun run check` - Run ESLint and TypeScript type checking (MUST run before completing any task)
 - `npx prisma generate` - Generate Prisma client
 - `npx prisma db push` - Push schema changes to database
+
+## Pre-Completion Checklist
+**IMPORTANT**: Before completing any coding task, you MUST run `bun run check` to verify:
+1. No ESLint errors or warnings
+2. No TypeScript type errors
+
+If errors are found, fix them before considering the task complete.
 
 ## Tech Stack
 Next.js 15 (App Router), React 19, TypeScript, Prisma (with Accelerate), NextAuth v5, Tailwind CSS 4, Chakra UI, Zod

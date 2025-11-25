@@ -321,8 +321,8 @@ export default function CreateAlbum({ session }: { session: Session | null }) {
 	};
 
 	return (
-		<>
-			<div className='flex flex-col pb-24 pt-8 w-full'>
+		<div className='min-h-screen bg-[var(--background)]'>
+			<div className='flex flex-col pb-24 pt-8 w-full max-w-xl mx-auto'>
 				{' '}
 				<CreateAlbumTopBar
 					onClick={currentStep === 3 ? handleSubmit : handleNext}
@@ -351,6 +351,6 @@ export default function CreateAlbum({ session }: { session: Session | null }) {
 					<div className='w-full animate-[fadeIn_0.3s_ease-out]'>{renderStepContent()}</div>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 }

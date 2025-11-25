@@ -82,41 +82,43 @@ export default function CirclePageView({ circleId, session }: { circleId: number
 	const hasAccess = !circle.isPrivate || circle.isMember;
 
 	return (
-		<div className='flex flex-col min-h-screen pb-20 bg-[var(--background)] text-[var(--foreground)]'>
-			<CircleHeader
-				circle={circle}
-				session={session}
-			/>
+		<div className='min-h-screen bg-[var(--background)] text-[var(--foreground)]'>
+			<div className='flex flex-col w-full max-w-xl mx-auto pb-20'>
+				<CircleHeader
+					circle={circle}
+					session={session}
+				/>
 
-			{hasAccess ? (
-				<>
-					<CircleMembers circleId={circleId} />
-					<CircleAlbums circleId={circleId} />
-				</>
-			) : (
-				<div className='flex flex-col items-center justify-center py-20 px-6 text-center'>
-					<div className='bg-[var(--background-secondary)] p-6 rounded-xl max-w-md'>
-						<div className='flex justify-center mb-4'>
-							<FaLock
-								size={40}
-								className='text-[var(--foreground-secondary)]'
-							/>
+				{hasAccess ? (
+					<>
+						<CircleMembers circleId={circleId} />
+						<CircleAlbums circleId={circleId} />
+					</>
+				) : (
+					<div className='flex flex-col items-center justify-center py-20 px-6 text-center'>
+						<div className='bg-[var(--background-secondary)] p-6 rounded-xl max-w-md'>
+							<div className='flex justify-center mb-4'>
+								<FaLock
+									size={40}
+									className='text-[var(--foreground-secondary)]'
+								/>
+							</div>
+							<h2 className='text-xl font-semibold mb-2'>Private Circle</h2>
+							<p className='text-[var(--foreground-secondary)] mb-6'>This is a private circle. You need to be a member to view its content.</p>
+							{session ? (
+								<p className='text-sm text-[var(--foreground-tertiary)]'>Request to join this circle to access its content.</p>
+							) : (
+								<button
+									onClick={() => router.push('/auth/login')}
+									className='px-6 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-[var(--primary-hover)]'
+								>
+									Log in to request access
+								</button>
+							)}
 						</div>
-						<h2 className='text-xl font-semibold mb-2'>Private Circle</h2>
-						<p className='text-[var(--foreground-secondary)] mb-6'>This is a private circle. You need to be a member to view its content.</p>
-						{session ? (
-							<p className='text-sm text-[var(--foreground-tertiary)]'>Request to join this circle to access its content.</p>
-						) : (
-							<button
-								onClick={() => router.push('/auth/login')}
-								className='px-6 py-2 bg-[var(--primary)] text-white rounded-lg hover:bg-[var(--primary-hover)]'
-							>
-								Log in to request access
-							</button>
-						)}
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }

@@ -7,16 +7,13 @@ export default async function EditProfilePage() {
   if (!session) {
     redirect('/auth/login');
   }
-//   const sessionUser = {
-// 	name: session.user.username,
-// 	email: session.user.email,
-// 	image: session.user.profileImage,
-// }
 
   return (
-    <div className="min-h-screen bg-circles-light px-4 pt-6 pb-20">
-      <h1 className="text-2xl font-bold text-circles-dark-blue mb-6">Edit Profile</h1>
-      <EditProfileForm session={session} />
+    <div className="min-h-screen bg-[var(--background)]">
+      <div className="w-full max-w-xl mx-auto px-4 pt-6 pb-20">
+        <h1 className="text-2xl font-bold text-[var(--primary)] mb-6">Edit Profile</h1>
+        <EditProfileForm session={session} />
+      </div>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export default async function GuestBrowsePage() {
 			_count: {
 				select: {
 					members: true,
-					albums: true,
+					Album: true,
 				},
 			},
 		},

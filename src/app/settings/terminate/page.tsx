@@ -7,17 +7,14 @@ export default async function DeleteAccountPage() {
     if (!session || !session.user) return redirect("/auth/login");
 
     return (
-        <>
-            <div
-                id="delete-account-wrapper"
-                className="flex flex-col m-0 p-0"
-            >
+        <div className="min-h-screen bg-[var(--background)]">
+            <div className="w-full max-w-xl mx-auto flex flex-col m-0 p-0">
                 <div className="text-center my-20">
                     <h3 className="text-2xl font-extrabold">Are you sure you want to delete your Account?</h3>
                     <h3 className="text-s">(This will be gone forever)</h3>
                 </div>
                 <DeletePrompt session={session} />
             </div>
-        </>
+        </div>
     );
 }
