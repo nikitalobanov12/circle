@@ -9,8 +9,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "typecheck": "tsc --noEmit",
     "check": "eslint \"src/**/*.{ts,tsx,js,jsx}\" && tsc --noEmit",
-    "rnext": "rm -rf .next",
-    "postinstall": "npx prisma@6 generate --no-engine"
+    "rnext": "rm -rf .next"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",
