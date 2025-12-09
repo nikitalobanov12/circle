@@ -49,6 +49,11 @@ export default auth((req) => {
 		return NextResponse.next();
 	}
 
+	// For API routes, return 401 JSON error instead of redirecting to login page
+	if (!isLoggedIn && pathname.startsWith('/api/')) {
+		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
 	// Redirect unauthenticated users to login for protected routes
 	if (!isLoggedIn) {
 		const loginUrl = new URL('/auth/login', req.nextUrl.origin);

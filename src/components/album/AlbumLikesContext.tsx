@@ -47,7 +47,18 @@ export function AlbumLikesProvider({ children, albumIds }: AlbumLikesProviderPro
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({ albumIds: memoizedAlbumIds }),				});
+				body: JSON.stringify({ albumIds: memoizedAlbumIds }),			});
+
+				// Handle unauthorized (guest) users gracefully - just show default like statuses
+				if (response.status === 401) {
+					// Initialize with default "not liked" status for guests
+					const defaultStatuses = memoizedAlbumIds.reduce((acc, albumId) => {
+						acc[albumId] = { liked: false, likeCount: 0 };
+						return acc;
+					}, {} as Record<number, AlbumLikeStatus>);
+					setLikeStatuses(defaultStatuses);
+					return;
+				}
 
 				if (response.ok) {
 					const data = await response.json();

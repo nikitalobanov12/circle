@@ -3,6 +3,7 @@ import './globals.css';
 import NextThemeProvider from '../components/theme/NextThemeProvider';
 import { SessionProvider } from '../components/providers/SessionProvider';
 import { GuestProvider } from '../components/providers/GuestProvider';
+import { PusherProvider } from '../components/providers/PusherProvider';
 import SignUpPromptModal from '@/components/guest/SignUpPromptModal';
 
 export const metadata: Metadata = {
@@ -23,10 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body className='antialiased pb-4 lg:pb-0'>
 				<SessionProvider>
 					<GuestProvider>
-						<NextThemeProvider>
-							{children}
-							<SignUpPromptModal />
-						</NextThemeProvider>
+						<PusherProvider>
+							<NextThemeProvider>
+								{children}
+								<SignUpPromptModal />
+							</NextThemeProvider>
+						</PusherProvider>
 					</GuestProvider>
 				</SessionProvider>
 			</body>

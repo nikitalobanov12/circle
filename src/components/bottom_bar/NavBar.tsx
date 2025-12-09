@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaHome, FaSearch, FaPlusCircle, FaBell, FaUser, FaSignInAlt } from 'react-icons/fa';
+import { FaHome, FaSearch, FaPlusCircle, FaBell, FaUser, FaSignInAlt, FaEnvelope } from 'react-icons/fa';
 import { useState, useEffect, useMemo } from 'react';
 import CreateContainer from '../create/create_container';
 import { useSession } from 'next-auth/react';
@@ -22,7 +22,7 @@ export default function NavBar() {
 		{ name: 'Home', path: '/home', icon: FaHome, requiresAuth: false },
 		{ name: 'Search', path: '/search', icon: FaSearch, requiresAuth: false },
 		{ name: 'New', path: '/new', icon: FaPlusCircle, requiresAuth: true },
-		{ name: 'Activity', path: '/activity', icon: FaBell, requiresAuth: true },
+		{ name: 'Messages', path: '/messages', icon: FaEnvelope, requiresAuth: true },
 		{ name: 'Profile', path: '/profile', icon: FaUser, requiresAuth: true },
 	]);
 
@@ -66,8 +66,11 @@ export default function NavBar() {
 				<div className='w-full max-w-xl p-2 flex justify-between border-t border-border/40'>
 					{activeNavItems.map(item => {
 						const isProfileItem = item.name === 'Profile';
+						const isMessagesItem = item.name === 'Messages';
 						const isActive = isProfileItem 
 							? pathname === item.path || (pathname.startsWith('/profile/') && item.path === '/profile') 
+							: isMessagesItem
+							? pathname === item.path || pathname.startsWith('/messages/')
 							: pathname === item.path || (item.name === 'Browse' && pathname === '/guest/browse');
 
 						if (item.name === 'New' && !isGuest) {

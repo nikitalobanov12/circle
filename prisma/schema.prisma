@@ -33,6 +33,8 @@ model User {
   settings         UserSettings?
   Activity         Activity[]
   Requests         Activity[]     @relation("RequestUser")
+  conversations    ConversationParticipant[]
+  messages         Message[]
 }
 
 model Circle {
@@ -228,4 +230,43 @@ enum Role {
   MEMBER
   MODERATOR
   ADMIN
+}
+
+model Conversation {
+  id           Int                       @id @default(autoincrement())
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([updatedAt])
+}
+
+model ConversationParticipant {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime?
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  senderId       Int
+  conversationId Int
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt])
 }
