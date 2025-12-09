@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { FaPaperPlane } from 'react-icons/fa';
+import { Send } from 'lucide-react';
 
 interface MessageInputProps {
 	onSend: (content: string) => void;
@@ -92,28 +92,37 @@ export default function MessageInput({ onSend, onTyping, disabled }: MessageInpu
 		}
 	};
 
+	const hasContent = content.trim().length > 0;
+
 	return (
-		<form onSubmit={handleSubmit} className='p-4 border-t border-border bg-background'>
-			<div className='flex items-end gap-2'>
+		<form onSubmit={handleSubmit} className='px-4 py-3 border-t border-[var(--border)] bg-[var(--background)]'>
+			<div className='flex items-end gap-3'>
 				<div className='flex-1 relative'>
 					<textarea
 						ref={textareaRef}
 						value={content}
 						onChange={handleChange}
 						onKeyDown={handleKeyDown}
-						placeholder='Type a message...'
+						placeholder='Message...'
 						rows={1}
 						disabled={disabled}
-						className='w-full px-4 py-3 bg-background-secondary rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-50'
+						className='w-full px-4 py-2.5 bg-[var(--background-secondary)] border border-[var(--border)] rounded-3xl resize-none text-[15px] text-[var(--foreground)] placeholder:text-[var(--foreground-secondary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]/30 disabled:opacity-50 transition-colors'
 						style={{ maxHeight: '120px' }}
 					/>
 				</div>
 				<button
 					type='submit'
-					disabled={!content.trim() || disabled}
-					className='p-3 bg-primary text-white rounded-full hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0'
+					disabled={!hasContent || disabled}
+					className={`
+						p-2.5 rounded-full flex-shrink-0 transition-all duration-200
+						${hasContent 
+							? 'bg-[var(--primary)] text-white shadow-md hover:shadow-lg hover:scale-105' 
+							: 'bg-[var(--background-secondary)] text-[var(--foreground-secondary)] cursor-not-allowed'
+						}
+						disabled:hover:scale-100 disabled:hover:shadow-none
+					`}
 				>
-					<FaPaperPlane className='w-5 h-5' />
+					<Send className={`w-5 h-5 ${hasContent ? '' : 'opacity-50'}`} />
 				</button>
 			</div>
 		</form>

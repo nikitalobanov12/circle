@@ -17,13 +17,27 @@ export default function TypingIndicator({ userNames }: TypingIndicatorProps) {
 	}
 
 	return (
-		<div className='flex items-center gap-2 text-sm text-foreground-secondary'>
-			<div className='flex gap-1'>
-				<span className='w-2 h-2 bg-foreground-secondary rounded-full animate-bounce' style={{ animationDelay: '0ms' }} />
-				<span className='w-2 h-2 bg-foreground-secondary rounded-full animate-bounce' style={{ animationDelay: '150ms' }} />
-				<span className='w-2 h-2 bg-foreground-secondary rounded-full animate-bounce' style={{ animationDelay: '300ms' }} />
+		<div className='flex items-end gap-2 ml-10'>
+			{/* Bubble style typing indicator */}
+			<div className='bg-[var(--background-secondary)] border border-[var(--border)] rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm'>
+				<div className='flex items-center gap-1.5'>
+					<div className='flex gap-1'>
+						<span 
+							className='w-2 h-2 bg-[var(--foreground-secondary)] rounded-full animate-bounce' 
+							style={{ animationDelay: '0ms', animationDuration: '1s' }} 
+						/>
+						<span 
+							className='w-2 h-2 bg-[var(--foreground-secondary)] rounded-full animate-bounce' 
+							style={{ animationDelay: '150ms', animationDuration: '1s' }} 
+						/>
+						<span 
+							className='w-2 h-2 bg-[var(--foreground-secondary)] rounded-full animate-bounce' 
+							style={{ animationDelay: '300ms', animationDuration: '1s' }} 
+						/>
+					</div>
+				</div>
 			</div>
-			<span>{text}</span>
+			<span className='text-xs text-[var(--foreground-secondary)] mb-1'>{text}</span>
 		</div>
 	);
 }
