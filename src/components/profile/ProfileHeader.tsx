@@ -1,7 +1,8 @@
 'use client';
-import { Settings, Check, X } from 'lucide-react';
+import { Settings, Check, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { toast } from 'react-hot-toast';
@@ -29,6 +30,7 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ profileData, session, onFollowUpdate }: ProfileHeaderProps) {
+	const router = useRouter();
 	const defaultProfileData = useMemo(() => ({
 		id: -1,
 		username: 'user',
@@ -52,6 +54,7 @@ export default function ProfileHeader({ profileData, session, onFollowUpdate }: 
 	const [followingCount, setFollowingCount] = useState(profile.followingCount);
 	const [requestSent, setRequestSent] = useState(false);
 	const [isProcessing, setIsProcessing] = useState(false);
+	const [isMessageProcessing, setIsMessageProcessing] = useState(false);
 
 	// Memoize the check request status function to prevent unnecessary re-renders
 	const checkRequestStatus = useCallback(async () => {
@@ -241,6 +244,39 @@ export default function ProfileHeader({ profileData, session, onFollowUpdate }: 
 		}
 	};
 
+	const handleMessageClick = async () => {
+		if (!session) {
+			window.location.href = '/auth/login';
+			return;
+		}
+
+		if (isMessageProcessing) return;
+		setIsMessageProcessing(true);
+
+		const toastId = toast.loading('Opening conversation...');
+
+		try {
+			const response = await fetch('/api/messages/conversations', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ participantId: profile.id }),
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to create conversation');
+			}
+
+			const data = await response.json();
+			toast.dismiss(toastId);
+			router.push(`/messages/${data.id}`);
+		} catch (error) {
+			console.error('Error creating conversation:', error);
+			toast.error('Failed to open conversation', { id: toastId });
+		} finally {
+			setIsMessageProcessing(false);
+		}
+	};
+
 	return (
 		<div className='relative flex flex-col items-center mb-6 rounded-2xl py-4 px-6'>
 			{profile.isOwnProfile && (
@@ -320,36 +356,46 @@ export default function ProfileHeader({ profileData, session, onFollowUpdate }: 
 						<button className='px-6 py-2 bg-[var(--primary)] text-white hover:opacity-90 font-medium rounded-md transition'>Edit Profile</button>
 					</Link>
 				) : (
-					<button
-						className={`px-6 py-2 rounded-lg hover:opacity-70 hover:cursor-pointer transition ${showUnfollowConfirm ? 'bg-red-500 text-white' : isFollowing ? 'bg-[var(--background-secondary)] border border-[var(--border)]' : requestSent ? 'bg-gray-400 text-white' : 'bg-[var(--primary)] text-white'}`}
-						onClick={handleFollowAction}
-						disabled={requestSent || isProcessing}
-					>
-						{showUnfollowConfirm ? (
-							<div className='flex items-center gap-2'>
-								<span>Unfollow?</span>
-								<Check className='w-4 h-4' />
-							</div>
-						) : isFollowing ? (
-							isProcessing ? (
-								'Processing...'
-							) : (
-								'Following'
-							)
-						) : profile.isProfilePrivate && !isFollowing ? (
-							requestSent ? (
-								'Request Sent'
+					<div className='flex gap-3'>
+						<button
+							className={`px-6 py-2 rounded-lg hover:opacity-70 hover:cursor-pointer transition ${showUnfollowConfirm ? 'bg-red-500 text-white' : isFollowing ? 'bg-[var(--background-secondary)] border border-[var(--border)]' : requestSent ? 'bg-gray-400 text-white' : 'bg-[var(--primary)] text-white'}`}
+							onClick={handleFollowAction}
+							disabled={requestSent || isProcessing}
+						>
+							{showUnfollowConfirm ? (
+								<div className='flex items-center gap-2'>
+									<span>Unfollow?</span>
+									<Check className='w-4 h-4' />
+								</div>
+							) : isFollowing ? (
+								isProcessing ? (
+									'Processing...'
+								) : (
+									'Following'
+								)
+							) : profile.isProfilePrivate && !isFollowing ? (
+								requestSent ? (
+									'Request Sent'
+								) : isProcessing ? (
+									'Processing...'
+								) : (
+									'Request to Follow'
+								)
 							) : isProcessing ? (
 								'Processing...'
 							) : (
-								'Request to Follow'
-							)
-						) : isProcessing ? (
-							'Processing...'
-						) : (
-							'Follow'
-						)}
-					</button>
+								'Follow'
+							)}
+						</button>
+						<button
+							className='px-4 py-2 rounded-lg bg-[var(--background-secondary)] border border-[var(--border)] hover:opacity-70 hover:cursor-pointer transition flex items-center gap-2'
+							onClick={handleMessageClick}
+							disabled={isMessageProcessing}
+						>
+							<MessageCircle className='w-5 h-5' />
+							<span>{isMessageProcessing ? 'Opening...' : 'Message'}</span>
+						</button>
+					</div>
 				)}
 			</div>
 		</div>
