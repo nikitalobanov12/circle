@@ -7,6 +7,7 @@ import NavBar from '@/components/bottom_bar/NavBar';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { Bell } from 'lucide-react';
 
 export default async function Home() {
 	const session = await auth();
@@ -156,10 +157,36 @@ export default async function Home() {
 		take: 20,
 	});
 
+	// Get count of pending friend requests and circle invites for activity badge
+	const activityCount = await prisma.activity.count({
+		where: {
+			userId: userId,
+			type: {
+				in: ['friend_request', 'circle_invite'],
+			},
+		},
+	});
+
 	return (
 		<>
 			<main className='w-full max-w-xl mx-auto min-h-screen bg-background flex flex-col items-center px-2 pb-8'>
-				<section className='w-full mt-4'>
+				{/* Header with activity button */}
+				<header className='w-full flex items-center justify-between py-4 sticky top-0 bg-background z-10'>
+					<h1 className='text-xl font-bold'>Home</h1>
+					<Link
+						href='/activity'
+						className='relative p-2 rounded-full hover:bg-white/10 transition-colors'
+					>
+						<Bell className='w-6 h-6' />
+						{activityCount > 0 && (
+							<span className='absolute -top-1 -right-1 min-w-5 h-5 flex items-center justify-center bg-red-500 text-white text-xs font-bold rounded-full px-1'>
+								{activityCount > 99 ? '99+' : activityCount}
+							</span>
+						)}
+					</Link>
+				</header>
+
+				<section className='w-full'>
 					{userCirclesFormatted.length > 0 ? (
 						<>
 							<h2 className='text-lg font-bold mb-2'>Your Circles</h2>
