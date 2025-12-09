@@ -3,8 +3,9 @@ import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaUtils } from '@/lib/prisma-utils';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-	try {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    try {
 		const albumId = parseInt(params.id);
 
 		if (isNaN(albumId)) {
@@ -127,8 +128,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 	}
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-	try {
+export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    try {
 		const resolvedParamsId = await params.id;
 		const albumId = parseInt(resolvedParamsId);
 		console.log('Processing photo upload for album:', albumId);

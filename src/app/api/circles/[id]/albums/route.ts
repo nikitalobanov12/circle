@@ -3,8 +3,9 @@ import { auth } from '@/auth';
 import prisma from '@/lib/prisma';
 import { PrismaUtils } from '@/lib/prisma-utils';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-	try {
+export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    try {
 		const session = await auth();
 		const userId = session?.user?.id ? parseInt(session.user.id, 10) : null;
 		const circleId = parseInt(params.id, 10);

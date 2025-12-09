@@ -5,20 +5,21 @@ import { FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 
-export default async function CircleInvitePage({ params }: { params: { id: string } }) {
-	const session = await auth();
-	if (!session?.user?.id) {
+export default async function CircleInvitePage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const session = await auth();
+    if (!session?.user?.id) {
 		redirect('/auth/login?callbackUrl=/circle');
 	}
-	const id = await params.id
-	const circleId = parseInt(id, 10);
-	if (isNaN(circleId)) {
+    const id = await params.id
+    const circleId = parseInt(id, 10);
+    if (isNaN(circleId)) {
 		redirect('/profile');
 	}
 
-	const userId = parseInt(session.user.id, 10);
+    const userId = parseInt(session.user.id, 10);
 
-	const circle = await prisma.circle.findUnique({
+    const circle = await prisma.circle.findUnique({
 		where: { id: circleId },
 		select: {
 			id: true,
@@ -31,11 +32,11 @@ export default async function CircleInvitePage({ params }: { params: { id: strin
 		},
 	});
 
-	if (!circle) {
+    if (!circle) {
 		redirect('/profile');
 	}
 
-	return (
+    return (
 		<div className='min-h-screen pb-20 bg-[var(--background)]  text-[var(--foreground)]'>
 			<div className='sticky top-0 z-10 bg-[var(--background)] py-4 px-4 mb-4'>
 				<div className='flex items-center'>

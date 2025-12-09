@@ -7,26 +7,27 @@ import Link from 'next/link';
 import { FaArrowLeft } from 'react-icons/fa';
 
 interface PageParams {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 
-export default async function CircleJoinRequestsPage({ params }: PageParams) {
-	const session = await auth();
+export default async function CircleJoinRequestsPage(props: PageParams) {
+    const params = await props.params;
+    const session = await auth();
 
-	if (!session?.user?.id) {
+    if (!session?.user?.id) {
 		redirect('/auth/login');
 	}
 
-	const { id: paramId } = params;
-	const id = parseInt(paramId);
-	if (isNaN(id)) {
+    const { id: paramId } = params;
+    const id = parseInt(paramId);
+    if (isNaN(id)) {
 		return notFound();
 	}
 
-	// Check if the circle exists and if the user has permission to see join requests
-	const circle = await prisma.circle.findUnique({
+    // Check if the circle exists and if the user has permission to see join requests
+    const circle = await prisma.circle.findUnique({
 		where: { id },
 		select: {
 			id: true,
@@ -45,26 +46,26 @@ export default async function CircleJoinRequestsPage({ params }: PageParams) {
 		},
 	});
 
-	// Circle doesn't exist
-	if (!circle) {
+    // Circle doesn't exist
+    if (!circle) {
 		return notFound();
 	}
 
-	// User doesn't have permission (not circle creator or not admin/moderator)
-	const userId = parseInt(session.user.id);
-	const isCreator = circle.creatorId === userId;
-	const hasPermission = isCreator || circle.members.length > 0;
+    // User doesn't have permission (not circle creator or not admin/moderator)
+    const userId = parseInt(session.user.id);
+    const isCreator = circle.creatorId === userId;
+    const hasPermission = isCreator || circle.members.length > 0;
 
-	if (!hasPermission) {
+    if (!hasPermission) {
 		redirect(`/circle/${id}`);
 	}
 
-	// Circle is not private
-	if (!circle.isPrivate) {
+    // Circle is not private
+    if (!circle.isPrivate) {
 		redirect(`/circle/${id}`);
 	}
 
-	return (
+    return (
 		<div className='min-h-screen pb-20 bg-[var(--background)]'>
 			<div className='sticky top-0 z-10 bg-[var(--background)] py-4 px-4 mb-4 flex items-center'>
 				<Link
